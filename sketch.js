@@ -3,9 +3,9 @@ let maskImg=null;
 let renderCounter=0;
 
 // change these three lines as appropiate
-let sourceFile = "input_4.jpg";
-let maskFile   = "mask_4.png";
-let outputFile = "output_4.png";
+let sourceFile = "flowers/waterlilies.png";
+let maskFile   = "flowers/masks/waterlilies_mask.png";
+let outputFile = "output_waterlilies.png";
 
 function preload() {
   sourceImg = loadImage(sourceFile);
@@ -18,24 +18,35 @@ function setup () {
 
   imageMode(CENTER);
   noStroke();
-  background(255, 0, 0);
+  background(0, 0, 0);
   sourceImg.loadPixels();
   maskImg.loadPixels();
 }
 
 function draw () {
-  for(let i=0;i<4000;i++) {
+  for(let i=0;i<8000;i++) {
     let x = floor(random(sourceImg.width));
     let y = floor(random(sourceImg.height));
     let pix = sourceImg.get(x, y);
     let mask = maskImg.get(x, y);
     fill(pix);
     if(mask[0] > 128) {
-      let pointSize = 10;
-      ellipse(x, y, pointSize, pointSize);
+      let pointSize = 6;
+      let circleRadius = 15;
+      let numCircles = 5;
+      let angleIncrement = TWO_PI / numCircles;
+      for (let i = 0; i < numCircles; i++) {
+        let x1 = x + cos(i * angleIncrement) * circleRadius;
+        let y1 = y + sin(i * angleIncrement) * circleRadius;
+        ellipse(x1, y1, pointSize, pointSize);
+      }
+    //stroke(pix)
+    //strokeWeight(5);
+    //line(x,y,x,y+10);
     }
     else {
-      let pointSize = 20;
+      let pointSize = 15;
+      noStroke();
       rect(x, y, pointSize, pointSize);    
     }
   }
@@ -44,7 +55,7 @@ function draw () {
     console.log("Done!")
     noLoop();
     // uncomment this to save the result
-    // saveArtworkImage(outputFile);
+    saveArtworkImage(outputFile);
   }
 }
 
