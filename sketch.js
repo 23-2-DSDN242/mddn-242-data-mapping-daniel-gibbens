@@ -3,9 +3,9 @@ let maskImg=null;
 let renderCounter=0;
 
 // change these three lines as appropiate
-let sourceFile = "flowers/waterlilies.png";
-let maskFile   = "flowers/masks/waterlilies_mask.png";
-let outputFile = "output_waterlilies.png";
+let sourceFile = "eyes/hazel-eye.jpg";
+let maskFile   = "eyes/iris-masks/hazel-eye-iris-mask.jpg";
+let outputFile = "output_eye.png";
 
 function preload() {
   sourceImg = loadImage(sourceFile);
@@ -38,11 +38,11 @@ function draw () {
       for (let i = 0; i < numCircles; i++) {
         let x1 = x + cos(i * angleIncrement) * circleRadius;
         let y1 = y + sin(i * angleIncrement) * circleRadius;
-        ellipse(x1, y1, pointSize, pointSize);
+        //ellipse(x1, y1, pointSize, pointSize);
       }
-    //stroke(pix)
-    //strokeWeight(5);
-    //line(x,y,x,y+10);
+    stroke(pix[0], pix[1], pix[2])
+    strokeWeight(5);
+    line(x,y,x,y+10);
     }
     else {
       let pointSize = 15;
