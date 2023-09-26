@@ -40,28 +40,43 @@ function draw () {
     console.log("Done!")
     noLoop();
     // uncomment this to save the result
-    saveArtworkImage(outputFile);
+    //saveArtworkImage(outputFile);
   }
 }
 
 function customPixel(pix, maskGiven, x, y) {
   if(maskGiven[0] > 128) {
-    stroke(pix[2], pix[1], pix[0])
+      if (y % 10 == 1) {
+        strokeWeight(7)
+        stroke(pix[2],pix[1],pix[0])
+      } else {
+        strokeWeight(1)
+        stroke(pix[1], pix[2], pix[0])
+      }
+
     if (pix[0] > 200 && pix[1] > 200 && pix[2] > 200) {
       stroke(pix[2] * 7/8,pix[1] * 9/10,pix[0])
     }
-    let pointSize = 5;
-    //ellipse(x, y, pointSize, pointSize);
     point(x,y)
+
   } else {
-    fill(pix[0]-40, pix[1]-40, pix[2]-40)
+    stroke(pix[0]-40, pix[1]-40, pix[2]-40)
     if (pix[0] > 100 && pix[1] > 100 && pix[1] > 100) {
-      fill(pix[0]/2 + 100,pix[1]/2+20,pix[2]/2)
+      if (x % 10 == 1) {
+        strokeWeight(12)
+        stroke(pix[0]/2 + 90,pix[1]/2+22,pix[2]/2)
+      } else {
+        if (y % 10 == 1) {
+          strokeWeight(9)
+          stroke(pix[0]/2 + 90,pix[1]/2+22,pix[2]/2)
+        } else {
+          strokeWeight(1)
+          stroke(pix[0]/2 + 70,pix[1]/2+20,pix[2]/2)
+        }
+      }
+      
     }
-    
-    let pointSize = 7;
-    noStroke();
-    rect(x, y, pointSize, pointSize);    
+    point(x,y)   
   }
 }
 
