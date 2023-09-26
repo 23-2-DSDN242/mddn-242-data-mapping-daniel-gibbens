@@ -6,9 +6,12 @@ let renderCounter=0;
 let sourceFile = "eyes/hazel-eye.jpg";
 let maskFile   = "eyes/iris-masks/hazel-eye-iris-mask.jpg";
 let secondEye = "eyes/blue-eye.jpg";
+let secondMask   = "eyes/iris-masks/blue-eye-iris-mask.jpg";
 let thirdEye = "eyes/blue-yellow-eye.jpg";
+let thirdMask   = "eyes/iris-masks/blue-yellow-eye-iris-mask.jpg";
 let fourthEye = "eyes/brown-eye.jpg";
-let outputFile = "output_all_eyes_merged.png";
+let fourthMask   = "eyes/iris-masks/brown-eye-iris-mask.jpg";
+let outputFile = "output_all_eyes_merged_cross_with_effects.png";
 
 function preload() {
   sourceImg = loadImage(sourceFile);
@@ -16,6 +19,9 @@ function preload() {
   secondImg = loadImage(secondEye);
   thirdImg = loadImage(thirdEye);
   fourthImg = loadImage(fourthEye);
+  secondMaskImg = loadImage(secondMask);
+  thirdMaskImg = loadImage(thirdMask);
+  fourthMaskImg = loadImage(fourthMask);
 }
 
 function setup () {
@@ -30,6 +36,9 @@ function setup () {
   secondImg.loadPixels();
   thirdImg.loadPixels();
   fourthImg.loadPixels();
+  secondMaskImg.loadPixels();
+  thirdMaskImg.loadPixels();
+  fourthMaskImg.loadPixels();
 }
 function draw () {
   for (let x = 0; x < sourceImg.width; x++) {
@@ -39,29 +48,34 @@ function draw () {
       let pix2 = secondImg.get(x, y);
       let pix3 = thirdImg.get(x, y);
       let pix4 = fourthImg.get(x, y);
-      switch (x % 4) {
-        case 0:
+      let mask2 = secondMaskImg.get(x, y);
+      let mask3 = thirdMaskImg.get(x, y);
+      let mask4 = fourthMaskImg.get(x, y);
+
+      if (x % 2 == 1) {
+        if (y % 2 == 1) {
           stroke(pix)
           strokeWeight(0)
-          point(x, y)
-          break;
-        case 1:
+          //point(x, y)
+          customPixel(pix,mask,x,y)
+        } else {
           stroke(pix2)
           strokeWeight(0)
-          point(x, y)
-          break;
-        case 2:
+          //point(x, y)
+          customPixel(pix2,mask2,x,y)
+        }
+      } else {
+        if (y % 2 == 1) {
           stroke(pix3)
           strokeWeight(0)
-          point(x, y)
-          break;
-        case 3:
+          //point(x, y)
+          customPixel(pix3,mask3,x,y)
+        } else {
           stroke(pix4)
           strokeWeight(0)
-          point(x, y)
-          break;
-        default:
-          break;
+          //point(x, y)
+          customPixel(pix4,mask4,x,y)
+        }
       }
     }
   }
@@ -71,6 +85,32 @@ function draw () {
     noLoop();
     // uncomment this to save the result
     saveArtworkImage(outputFile);
+  }
+}
+
+function customPixel(pix, maskGiven, x, y) {
+  if(maskGiven[0] > 128) {
+    fill(pix[1], pix[0], pix[2])
+    if (pix[0] > 200 && pix[1] > 200 && pix[1] > 254) {
+    }
+    let pointSize = 5;
+    let circleRadius = 2;
+    let numCircles = 3;
+    let angleIncrement = TWO_PI / numCircles;
+    for (let i = 0; i < numCircles; i++) {
+      let x1 = x + cos(i * angleIncrement) * circleRadius;
+      let y1 = y + sin(i * angleIncrement) * circleRadius;
+      ellipse(x1, y1, pointSize, pointSize);
+    }
+  } else {
+    fill(pix[0]-40, pix[1]-40, pix[2]-40)
+    if (pix[0] > 100 && pix[1] > 100 && pix[1] > 100) {
+      fill(pix[0]/2 + 70,pix[1]/2+20,pix[2]/2)
+    }
+    
+    let pointSize = 7;
+    noStroke();
+    rect(x, y, pointSize, pointSize);    
   }
 }
 
@@ -98,8 +138,7 @@ function oldDraw() {
     //stroke(pix[0], 0, 55)
     //strokeWeight(5);
     //line(x,y,x,y+10);
-    }
-    else {
+    } else {
       fill(pix[0]-40, pix[1]-40, pix[2]-40)
       if (pix[0] > 100 && pix[1] > 100 && pix[1] > 100) {
         fill(pix[0]/2 + 70,pix[1]/2+20,pix[2]/2)
