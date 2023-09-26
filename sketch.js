@@ -5,11 +5,17 @@ let renderCounter=0;
 // change these three lines as appropiate
 let sourceFile = "eyes/hazel-eye.jpg";
 let maskFile   = "eyes/iris-masks/hazel-eye-iris-mask.jpg";
-let outputFile = "output_eye_darker2.png";
+let secondEye = "eyes/blue-eye.jpg";
+let thirdEye = "eyes/blue-yellow-eye.jpg";
+let fourthEye = "eyes/brown-eye.jpg";
+let outputFile = "output_all_eyes_merged.png";
 
 function preload() {
   sourceImg = loadImage(sourceFile);
   maskImg = loadImage(maskFile);
+  secondImg = loadImage(secondEye);
+  thirdImg = loadImage(thirdEye);
+  fourthImg = loadImage(fourthEye);
 }
 
 function setup () {
@@ -21,9 +27,54 @@ function setup () {
   background(20, 0, 0);
   sourceImg.loadPixels();
   maskImg.loadPixels();
+  secondImg.loadPixels();
+  thirdImg.loadPixels();
+  fourthImg.loadPixels();
+}
+function draw () {
+  for (let x = 0; x < sourceImg.width; x++) {
+    for (let y = 0; y < sourceImg.height; y++) {
+      let pix = sourceImg.get(x, y);
+      let mask = maskImg.get(x, y);
+      let pix2 = secondImg.get(x, y);
+      let pix3 = thirdImg.get(x, y);
+      let pix4 = fourthImg.get(x, y);
+      switch (x % 4) {
+        case 0:
+          stroke(pix)
+          strokeWeight(0)
+          point(x, y)
+          break;
+        case 1:
+          stroke(pix2)
+          strokeWeight(0)
+          point(x, y)
+          break;
+        case 2:
+          stroke(pix3)
+          strokeWeight(0)
+          point(x, y)
+          break;
+        case 3:
+          stroke(pix4)
+          strokeWeight(0)
+          point(x, y)
+          break;
+        default:
+          break;
+      }
+    }
+  }
+  renderCounter = renderCounter + 1;
+  if(renderCounter > 1) {
+    console.log("Done!")
+    noLoop();
+    // uncomment this to save the result
+    saveArtworkImage(outputFile);
+  }
 }
 
-function draw () {
+function oldDraw() {
   for(let i=0;i<8000;i++) {
     let x = floor(random(sourceImg.width));
     let y = floor(random(sourceImg.height));
