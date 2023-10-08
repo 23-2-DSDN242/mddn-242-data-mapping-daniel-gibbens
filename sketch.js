@@ -3,12 +3,12 @@ let maskImg=null;
 let renderCounter=0;
 
 // change these three lines as appropiate
-let sourceFile = "eyes/hazel-eye.jpg";
-let maskFile   = "eyes/iris-masks/hazel-eye-iris-mask.jpg";
-//let sourceFile = "eyes/face.jpg";
-//let maskFile   = "eyes/iris-masks/face-mask.png";
+//let sourceFile = "eyes/hazel-eye.jpg";
+//let maskFile   = "eyes/iris-masks/hazel-eye-iris-mask.jpg";
+let sourceFile = "eyes/face.jpg";
+let maskFile   = "eyes/iris-masks/face-mask.png";
 
-let outputFile = "output_red_face.png";
+let outputFile = "output_half_face.png";
 
 let eyePixels = []
 
@@ -44,10 +44,20 @@ function draw () {
     pix = eyePix.pix
     if (eyePix.y % 10 == 1) {
         strokeWeight(7)
-        stroke(pix[2],pix[1],pix[0])
+        if (eyePix.x < sourceImg.width/2) {
+          stroke(pix[2],pix[1],pix[0])
+        } else {
+          stroke(pix[0],pix[1],pix[2])
+        }
+        
       } else {
         strokeWeight(1)
-        stroke(pix[1], pix[2], pix[0])
+        if (eyePix.x < sourceImg.width/2) {
+          stroke(pix[1], pix[2], pix[0])
+        } else {
+          stroke(pix[0], pix[2], pix[1])
+        }
+        
       }
 
     if (pix[0] > 200 && pix[1] > 200 && pix[2] > 200) {
@@ -60,7 +70,7 @@ function draw () {
     console.log("Done!")
     noLoop();
     // uncomment this to save the result
-    //saveArtworkImage(outputFile);
+    saveArtworkImage(outputFile);
   }
 }
 
@@ -79,18 +89,36 @@ function customPixel(pix, maskGiven, x, y) {
     if (pix[0] > 120 && pix[1] > 100 && pix[1] > 100) {
       if (y % 9 == 1) {
         h =7.2
-        fill(pix[0]*1.2-80,pix[1]/2-40,pix[2]/2-60)
+        if (x < sourceImg.width/2) {
+          fill(pix[0]*1.2-80,pix[1]/2-40,pix[2]/2-60)
+        } else {
+          fill(pix[2]/2-60,pix[1]/2-40,pix[0] * 1.2 - 80)
+        }
+        
       } else {
         h=1
-        fill(pix[0]/2 + 20-40,pix[1]/2-40,pix[2]/2-60)
+        if (x < sourceImg.width/2) {
+          fill(pix[0]/2 + 20-40,pix[1]/2-40,pix[2]/2-60)
+        } else {
+          fill(pix[2]/2-60,pix[1]/2-40,pix[0]/2 + 20-40)
+        }
+        
       }  
     } else {
       if (y % 9 == 1) {
         h=7.2
-        fill(pix[0]-45,pix[1]-55,pix[2]-55)
+        if (x < sourceImg.width/2) {
+          fill(pix[0]-45,pix[1]-55,pix[2]-55)
+        } else {
+          fill(pix[2]-55,pix[1]-55,pix[0]-45)
+        }
       } else {
         h=1
-        fill(pix[0]-45,pix[1]-25,pix[2]-55)
+        if (x < sourceImg.width/2) {
+          fill(pix[0]-45,pix[1]-25,pix[2]-55)
+        } else {
+          fill(pix[2]-55,pix[1]-25,pix[0]-45)
+        }
       } 
     }
     noStroke()
