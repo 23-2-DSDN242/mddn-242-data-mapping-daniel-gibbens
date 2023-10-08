@@ -6,9 +6,9 @@ let renderCounter=0;
 let sourceFile = "eyes/hazel-eye.jpg";
 let maskFile   = "eyes/iris-masks/hazel-eye-iris-mask.jpg";
 
-let outputFile = "output_lines_bg_rect.png";
+let outputFile = "output_red_hazel.png";
 
-eyePixels = []
+let eyePixels = []
 
 function preload() {
   sourceImg = loadImage(sourceFile);
@@ -70,90 +70,29 @@ function customPixel(pix, maskGiven, x, y) {
         "x" : x,
         "y" : y
       })
-      /*if (y % 10 == 1) {
-        strokeWeight(7)
-        stroke(pix[2],pix[1],pix[0])
-      } else {
-        strokeWeight(1)
-        stroke(pix[1], pix[2], pix[0])
-      }
-
-    if (pix[0] > 200 && pix[1] > 200 && pix[2] > 200) {
-      stroke(pix[2] * 7/8,pix[1] * 9/10,pix[0])
-    }
-    point(x,y)*/
 
   } else {
     h = 1
     stroke(pix[0]-40, pix[1]-40, pix[2]-40)
-    if (pix[0] > 100 && pix[1] > 100 && pix[1] > 100) {
+    if (pix[0] > 80 && pix[1] > 80 && pix[1] > 80) {
       if (y % 9 == 1) {
-        //strokeWeight(7)
-        h =7
-        fill(pix[0]/2 + 90,pix[1]/2+22,pix[2]/2)
+        h =7.2
+        fill(pix[0]*1.2-80,pix[1]/2-40,pix[2]/2-60)
       } else {
-        //strokeWeight(1)
         h=1
-        fill(pix[0]/2 + 20,pix[1]/2+20,pix[2]/2)
+        fill(pix[0]/2 + 20-40,pix[1]/2-40,pix[2]/2-60)
       }  
     } else {
       if (y % 9 == 1) {
-        //strokeWeight(7)
-        h=7
-        fill(pix[0]-40,pix[1]-40,pix[2]-40)
+        h=7.2
+        fill(pix[0]-45,pix[1]-55,pix[2]-55)
       } else {
-        //strokeWeight(1)
         h=1
-        fill(pix[0]-40,pix[1]-10,pix[2]-40)
+        fill(pix[0]-45,pix[1]-25,pix[2]-55)
       } 
     }
     noStroke()
-    rect(x,y,h)
-    //point(x,y)   
-  }
-}
-
-function oldDraw() {
-  for(let i=0;i<8000;i++) {
-    let x = floor(random(sourceImg.width));
-    let y = floor(random(sourceImg.height));
-    let pix = sourceImg.get(x, y);
-    let mask = maskImg.get(x, y);
-    fill(pix);
-    if(mask[0] > 128) {
-      fill(pix[2], pix[1], pix[0])
-      if (pix[0] > 200 && pix[1] > 200 && pix[1] > 254) {
-        continue;
-      }
-      let pointSize = 6;
-      let circleRadius = 5;
-      let numCircles = 5;
-      let angleIncrement = TWO_PI / numCircles;
-      for (let i = 0; i < numCircles; i++) {
-        let x1 = x + cos(i * angleIncrement) * circleRadius;
-        let y1 = y + sin(i * angleIncrement) * circleRadius;
-        ellipse(x1, y1, pointSize, pointSize);
-      }
-    //stroke(pix[0], 0, 55)
-    //strokeWeight(5);
-    //line(x,y,x,y+10);
-    } else {
-      fill(pix[0]-40, pix[1]-40, pix[2]-40)
-      if (pix[0] > 100 && pix[1] > 100 && pix[1] > 100) {
-        fill(pix[0]/2 + 70,pix[1]/2+20,pix[2]/2)
-      }
-      
-      let pointSize = 15;
-      noStroke();
-      rect(x, y, pointSize, pointSize);    
-    }
-  }
-  renderCounter = renderCounter + 1;
-  if(renderCounter > 10) {
-    console.log("Done!")
-    noLoop();
-    // uncomment this to save the result
-    //saveArtworkImage(outputFile);
+    rect(x,y,h)  
   }
 }
 
