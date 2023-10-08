@@ -5,6 +5,8 @@ let renderCounter=0;
 // change these three lines as appropiate
 let sourceFile = "eyes/hazel-eye.jpg";
 let maskFile   = "eyes/iris-masks/hazel-eye-iris-mask.jpg";
+//let sourceFile = "eyes/face.jpg";
+//let maskFile   = "eyes/iris-masks/face-mask.png";
 
 let outputFile = "output_red_hazel.png";
 
@@ -58,7 +60,7 @@ function draw () {
     console.log("Done!")
     noLoop();
     // uncomment this to save the result
-    saveArtworkImage(outputFile);
+    //saveArtworkImage(outputFile);
   }
 }
 
@@ -74,7 +76,7 @@ function customPixel(pix, maskGiven, x, y) {
   } else {
     h = 1
     stroke(pix[0]-40, pix[1]-40, pix[2]-40)
-    if (pix[0] > 80 && pix[1] > 80 && pix[1] > 80) {
+    if (pix[0] > 120 && pix[1] > 100 && pix[1] > 100) {
       if (y % 9 == 1) {
         h =7.2
         fill(pix[0]*1.2-80,pix[1]/2-40,pix[2]/2-60)
