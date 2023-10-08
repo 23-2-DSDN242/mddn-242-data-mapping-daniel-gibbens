@@ -3,10 +3,10 @@ let maskImg=null;
 let renderCounter=0;
 
 // change these three lines as appropiate
-//let sourceFile = "eyes/hazel-eye.jpg";
-//let maskFile   = "eyes/iris-masks/hazel-eye-iris-mask.jpg";
-let sourceFile = "eyes/face.jpg";
-let maskFile   = "eyes/iris-masks/face-mask.png";
+let sourceFile = "eyes/hazel-eye.jpg";
+let maskFile   = "eyes/iris-masks/hazel-eye-iris-mask.jpg";
+//let sourceFile = "eyes/face.jpg";
+//let maskFile   = "eyes/iris-masks/face-mask.png";
 
 let outputFile = "output_red_face.png";
 
@@ -60,7 +60,7 @@ function draw () {
     console.log("Done!")
     noLoop();
     // uncomment this to save the result
-    saveArtworkImage(outputFile);
+    //saveArtworkImage(outputFile);
   }
 }
 
