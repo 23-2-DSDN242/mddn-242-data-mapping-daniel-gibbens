@@ -1,20 +1,23 @@
 let sourceImg=null;
 let maskImg=null;
+let ringMaskImg=null;
 let renderCounter=0;
 
 // change these three lines as appropiate
-let sourceFile = "eyes/hazel-eye.jpg";
-let maskFile   = "eyes/iris-masks/hazel-eye-iris-mask.jpg";
+let sourceFile = "eyes/iris_ai/input_new.jpg";
+let maskFile   = "eyes/iris_ai/mask_new.png";
+let pupilRingMask   = "eyes/pupil_circle_copy/mask_new.png";
 //let sourceFile = "eyes/face.jpg";
 //let maskFile   = "eyes/iris-masks/face-mask.png";
 
-let outputFile = "output_eye_red.png";
+let outputFile = "cool_effect.png";
 
 let eyePixels = []
 
 function preload() {
   sourceImg = loadImage(sourceFile);
   maskImg = loadImage(maskFile);
+  ringMaskImg = loadImage(pupilRingMask);
 
 }
 
@@ -34,15 +37,19 @@ function draw () {
     for (let y = 0; y < sourceImg.height; y++) {
       let pix = sourceImg.get(x, y);
       let mask = maskImg.get(x, y);
+      let ringMask = ringMaskImg.get(x, y);
       stroke(pix)
       strokeWeight(0)
-      customPixel(pix,mask,x,y)
+      customPixel(pix,mask,x,y,ringMask)
     }
   }
   eyePixels.reverse();
   eyePixels.forEach(eyePix => {
     pix = eyePix.pix
-    if (eyePix.y % 10 == 1) {
+    if (eyePix.ringMask[0] > 128) {
+      stroke(255,255,255);
+    } else {
+      if (eyePix.y % 10 == 1) {
         strokeWeight(7)
         stroke(pix[2],pix[1],pix[0])
         
@@ -50,7 +57,9 @@ function draw () {
         strokeWeight(1)
         stroke(pix[1], pix[2], pix[0])
       }
-
+    }
+    
+    // reflective part in the eye
     if (pix[0] > 200 && pix[1] > 200 && pix[2] > 200) {
       stroke(pix[2] * 7/8,pix[1] * 9/10,pix[0])
     }
@@ -65,13 +74,14 @@ function draw () {
   }
 }
 
-function customPixel(pix, maskGiven, x, y) {
+function customPixel(pix, maskGiven, x, y, ringMask) {
   if(maskGiven[0] > 128) {
       eyePixels.push({
         "pix" : pix,
         "maskGiven" : maskGiven,
         "x" : x,
-        "y" : y
+        "y" : y,
+        "ringMask" : ringMask
       })
 
   } else {
