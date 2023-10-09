@@ -8,7 +8,7 @@ let maskFile   = "eyes/iris-masks/hazel-eye-iris-mask.jpg";
 //let sourceFile = "eyes/face.jpg";
 //let maskFile   = "eyes/iris-masks/face-mask.png";
 
-let outputFile = "output_half_eye.png";
+let outputFile = "output_eye_red.png";
 
 let eyePixels = []
 
