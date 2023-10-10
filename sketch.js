@@ -4,20 +4,20 @@ let ringMaskImg=null;
 let renderCounter=0;
 
 // change these three lines as appropiate
-let sourceFile = "eyes/iris_ai/input_new.jpg";
-let maskFile   = "eyes/iris_ai/mask_new.png";
-let pupilRingMask   = "eyes/pupil_circle_copy/mask_new.png";
+let sourceFile = "eyes/hazel-eye.jpg";
+let maskFile   = "eyes/iris-masks/hazel-eye-iris-mask.jpg";
+let pupilMask   = "eyes/pupil-masks/hazel-eye-pupil-mask.jpg";
 //let sourceFile = "eyes/face.jpg";
 //let maskFile   = "eyes/iris-masks/face-mask.png";
 
-let outputFile = "cool_effect.png";
+let outputFile = "Ringmask.png";
 
 let eyePixels = []
 
 function preload() {
   sourceImg = loadImage(sourceFile);
   maskImg = loadImage(maskFile);
-  ringMaskImg = loadImage(pupilRingMask);
+  pupilMaskImg = loadImage(pupilMask);
 
 }
 
@@ -30,17 +30,88 @@ function setup () {
   background(20, 0, 0);
   sourceImg.loadPixels();
   maskImg.loadPixels();
+  pupilMaskImg.loadPixels();
 
 }
+
+function blurPixel(x, y, radius) {
+  let r = 0;
+  let g = 0;
+  let b = 0;
+  let count = 0;
+
+  // Loop through neighborhood
+  for (let i = -radius; i <= radius; i++) {
+    for (let j = -radius; j <= radius; j++) {
+
+      if (i * i + j * j <= radius * radius) {
+        // Edge case
+        let newX = constrain(x + i, 0, sourceImg.width - 1);
+        let newY = constrain(y + j, 0, sourceImg.height - 1);
+
+        let pix = pupilMaskImg.get(newX, newY);
+
+        r += pix[0];
+        g += pix[1];
+        b += pix[2];
+        count++;
+      }
+    }
+  }
+
+  // Calculate the average color in the neighborhood
+  r /= count;
+  g /= count;
+  b /= count;
+
+  return [r, g, b];
+}
+
+ringMask = [];
+
+function makeRingMask() {
+  for (let x = 0; x < sourceImg.width; x++) {
+    let col = [];
+    for (let y = 0; y < sourceImg.height; y++) {
+
+      let pupil = pupilMaskImg.get(x, y);
+      strokeWeight(0)
+
+      const IS_WHITE = pupil[0] === 255 && pupil[1] === 255 && pupil[2] === 255;
+      if (IS_WHITE) {
+        pupil = blurPixel(x, y, 5);
+      }
+      col.push(pupil)
+    }
+    ringMask.push(col)
+  }
+  for (let x = sourceImg.width-1; x >= 0; x--) {
+    for (let y = 0; y < sourceImg.height; y++) {
+
+      let pupil = ringMask[x][y];
+
+      const IS_WHITE = pupil[0] === 255 && pupil[1] === 255 && pupil[2] === 255;
+      if (IS_WHITE) {
+        pupil = [0,0,0,255]
+      } else if (pupil[0] > 150 && pupil[1] > 150 && pupil[2] > 150) {
+        pupil = [255,255,255,255]
+      }
+      ringMask[x][y] = pupil;
+    }
+  }
+}
+
 function draw () {
+  makeRingMask();
+
   for (let x = sourceImg.width; x > 0; x--) {
     for (let y = 0; y < sourceImg.height; y++) {
       let pix = sourceImg.get(x, y);
       let mask = maskImg.get(x, y);
-      let ringMask = ringMaskImg.get(x, y);
+      let pupil = ringMask[x-1][y];
       stroke(pix)
       strokeWeight(0)
-      customPixel(pix,mask,x,y,ringMask)
+      customPixel(pix, mask, x, y, pupil)
     }
   }
   eyePixels.reverse();
@@ -74,16 +145,15 @@ function draw () {
   }
 }
 
-function customPixel(pix, maskGiven, x, y, ringMask) {
+function customPixel(pix, maskGiven, x, y, pupil) {
   if(maskGiven[0] > 128) {
       eyePixels.push({
         "pix" : pix,
         "maskGiven" : maskGiven,
         "x" : x,
         "y" : y,
-        "ringMask" : ringMask
+        "ringMask" : pupil
       })
-
   } else {
     h = 1
     if (pix[0] > 80 && pix[1] > 80 && pix[1] > 80) {
