@@ -3,11 +3,11 @@ let maskImg=null;
 let ringMaskImg=null;
 let renderCounter=0;
 
-let sourceFile = "eyes/hazel-eye.jpg";
-let maskFile   = "eyes/iris-masks/hazel-eye-iris-mask.jpg";
-let pupilMask   = "eyes/pupil-masks/hazel-eye-pupil-mask.jpg";
+let sourceFile = "ai_images/iris_test/t6.jpg";
+let maskFile   = "ai_images/iris_test/t6i.png";
+let pupilMask   = "ai_images/pupil_test/t6p.png";
 
-let outputFile = "hazel_training.png";
+let outputFile = "output_test_6.png";
 
 // Used for storing pixels that contain the iris
 let eyePixels = []
@@ -28,10 +28,32 @@ function setup () {
   imageMode(CENTER);
   noStroke();
   background(20, 0, 0);
+
+  ringMaskImg = createImage(pupilMaskImg.width, pupilMaskImg.height);
+  ringMaskImg.loadPixels();
+
   sourceImg.loadPixels();
   maskImg.loadPixels();
   pupilMaskImg.loadPixels();
 
+  for (let i = 0; i < pupilMaskImg.pixels.length; i += 4) {
+    if (min([pupilMaskImg.pixels[i], pupilMaskImg.pixels[i+1], pupilMaskImg.pixels[i+2], pupilMaskImg.pixels[i+3]]) === 0) {
+      // If a channel is 0 set pixel to black
+      ringMaskImg.pixels[i] = 0;
+      ringMaskImg.pixels[i + 1] = 0;
+      ringMaskImg.pixels[i + 2] = 0;
+      ringMaskImg.pixels[i + 3] = 255;
+    } else {
+      // Set to white
+      ringMaskImg.pixels[i] = 255;
+      ringMaskImg.pixels[i + 1] = 255;
+      ringMaskImg.pixels[i + 2] = 255;
+      ringMaskImg.pixels[i + 3] = 255;
+    }
+  }
+  
+  ringMaskImg.updatePixels();
+  makeRingMask();
 }
 
 // Blurs a pixel by using the average pixel colour around it
@@ -50,7 +72,7 @@ function blurPixel(x, y, radius) {
         let newX = constrain(x + i, 0, sourceImg.width - 1);
         let newY = constrain(y + j, 0, sourceImg.height - 1);
 
-        let pix = pupilMaskImg.get(newX, newY);
+        let pix = ringMaskImg.get(newX, newY);
 
         r += pix[0];
         g += pix[1];
@@ -73,7 +95,7 @@ function makeRingMask() {
     let col = [];
     for (let y = 0; y < sourceImg.height; y++) {
 
-      let pupil = pupilMaskImg.get(x, y);
+      let pupil = ringMaskImg.get(x, y);
       strokeWeight(0)
 
       // Only blur the white pixels
@@ -105,8 +127,6 @@ function makeRingMask() {
 }
 
 function draw () {
-  // Creates the ring mask
-  makeRingMask();
 
   for (let x = sourceImg.width; x > 0; x--) {
     for (let y = 0; y < sourceImg.height; y++) {
