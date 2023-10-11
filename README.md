@@ -128,10 +128,19 @@ Since the AI had failed, I experimented with blurring to create the ring. Unfort
 
 In the end, I decided to use the pixel values around the given pixel and averaged them to create the ring area (for a more detailed explanation, refer to the code). This approach became my final design. Despite the ring texture not blending as seamlessly with the image as I had hoped, I valued the visual hierarchy and contrast that the white ring added between itself and the background enough to keep it.
 
+So, my final design features an intense and angry background with a bright iris and a white ring around the pupil. All of these elements contribute to the theme of the contrast between 'the world' and what 'we see.' To enhance this effect, the background and iris are drawn in opposite order, and the purple fill hue of the gaps in the iris, along with the green fill hue of the gaps in the background, creates a strong contrast.
+
 Final Design
 ![final](assets/output_final.png)
 
 Note: It should be noted that my design process for pixel manipulation was predominantly carried out on the hazel-eye image.
+
+##### AI Masks:
+
+After testing several images with the AI, I found that in most cases, it was able to create an iris and pupil mask. However, it struggled when the eye was small, and the pupil masks generated were quite jagged, resulting in manual masks consistently having better results.
+
+Output using AI masks
+![final](output_test_4.png)
 
 #### References:
 Close-up of a blue female human eye. (2023). iStock.
